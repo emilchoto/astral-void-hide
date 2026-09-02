@@ -2,25 +2,11 @@
 -- Developed by @s39z_
 -- Premium Void Teleport + Anti-Aim + Riot Bypass
 
--- Safe HTTP Get function wrapper using standard Lua checks
-local getScript = function(url)
-    local success, result = pcall(function()
-        return game:HttpGet(url)
-    end)
-    if success and result then
-        return result
-    end
-    
-    if type(http_request) == "function" then
-        return http_request({Url = url, Method = "GET"}).Body
-    elseif type(request) == "function" then
-        return request({Url = url, Method = "GET"}).Body
-    end
-    
-    error("HttpGet is not supported by your current environment/executor.")
-end
+-- REPLACE THIS LINE WITH THE UI LIBRARY SOURCE CODE directly:
+-- local Teleport = loadstring(...)() 
+-- Example:
+-- local Teleport = (function() ... paste contents of 1.txt here ... end)()
 
-local Teleport = loadstring(getScript("https://raw.githubusercontent.com/WEFGQERQEGWGE/a/refs/heads/main/1.txt"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
