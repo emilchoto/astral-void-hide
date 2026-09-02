@@ -2,7 +2,25 @@
 -- Developed by @s39z_
 -- Premium Void Teleport + Anti-Aim + Riot Bypass
 
-local Teleport = loadstring(game:HttpGet("https://raw.githubusercontent.com/WEFGQERQEGWGE/a/refs/heads/main/1.txt"))()
+-- Safe HTTP Get function wrapper using standard Lua checks
+local getScript = function(url)
+    local success, result = pcall(function()
+        return game:HttpGet(url)
+    end)
+    if success and result then
+        return result
+    end
+    
+    if type(http_request) == "function" then
+        return http_request({Url = url, Method = "GET"}).Body
+    elseif type(request) == "function" then
+        return request({Url = url, Method = "GET"}).Body
+    end
+    
+    error("HttpGet is not supported by your current environment/executor.")
+end
+
+local Teleport = loadstring(getScript("https://raw.githubusercontent.com/WEFGQERQEGWGE/a/refs/heads/main/1.txt"))()
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UIS = game:GetService("UserInputService")
@@ -74,19 +92,6 @@ local function getRoot()
     return isAlive() and HumanoidRootPart or nil
 end
 
--- Character respawn handler
-LocalPlayer.CharacterAdded:Connect(function(newChar)
-    Character = newChar
-    HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
-    Humanoid = Character:WaitForChild("Humanoid")
-    OriginalCFrame = HumanoidRootPart.CFrame
-    
-    if Settings.VoidEnabled then
-        task.wait(0.5)
-        teleportToVoid()
-    end
-end)
-
 -- Play teleport sound
 local function playTeleportSound()
     pcall(function()
@@ -142,6 +147,19 @@ local function teleportToVoid()
         TotalTeleportsLabel:SetText("Total Teleports: " .. TeleportCount)
     end
 end
+
+-- Character respawn handler
+LocalPlayer.CharacterAdded:Connect(function(newChar)
+    Character = newChar
+    HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+    Humanoid = Character:WaitForChild("Humanoid")
+    OriginalCFrame = HumanoidRootPart.CFrame
+    
+    if Settings.VoidEnabled then
+        task.wait(0.5)
+        teleportToVoid()
+    end
+end)
 
 -- Apply motion effects
 local function applyMotion(deltaTime)
